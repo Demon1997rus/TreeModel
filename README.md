@@ -11,6 +11,8 @@ cpp
 Copy code
 #include <QtXml>
 
+#include <QtXml>
+
 int main()
 {
     // Загрузить XML файл в объект QDomDocument
@@ -34,4 +36,5 @@ int main()
 
     return 0;
 }
+
 В этом примере мы ищем первый элемент с тегом "title" и изменяем его текст на "New Title". Затем мы сохраняем измененный XML документ в файл "output.xml".
