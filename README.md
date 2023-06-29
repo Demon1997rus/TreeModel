@@ -1,4 +1,4 @@
 # TreeModel
 Иерархическая модель Qt в паре с делегатом
 
-https://disk.yandex.ru/d/mausYF2MdmoXXg
+https://disk.yandex.ru/i/DROl26KgYIE3zw
