@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,8 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-    treeview.cpp
+        src/main.cpp \
+    src/treeview.cpp \
+    src/models/treemodel.cpp \
+    src/models/node.cpp
 
 HEADERS += \
-    treeview.h
+    src/treeview.h \
+    src/models/treemodel.h \
+    src/models/node.h
