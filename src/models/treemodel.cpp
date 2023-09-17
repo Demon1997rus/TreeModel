@@ -5,22 +5,10 @@
 
 namespace TreeExample
 {
-TreeModel::TreeModel(const QString& pathModelData, QObject* parent)
+TreeModel::TreeModel(const QString& data, QObject* parent)
   : QAbstractItemModel(parent), m_root(new Node({ "Title", "Summary" }))
 {
-    QFile file(pathModelData);
-    QDomDocument doc;
-    QString errorMsg;
-    if (doc.setContent(&file, &errorMsg))
-    {
-        qDebug() << "The model accepted the data";
-        setupModelData(doc);
-    }
-    else
-    {
-        qCritical() << errorMsg;
-        qFatal("Error in data.xml file");
-    }
+    setupModelData(data.split("\n"), m_root);
 }
 
 TreeModel::~TreeModel() { delete m_root; }
@@ -108,10 +96,61 @@ QVariant TreeModel::headerData(int section, Qt::Orientation orientation, int rol
     return QVariant();
 }
 
-void TreeModel::setupModelData(const QDomDocument& data)
+void TreeModel::setupModelData(const QStringList& lines, Node* parent)
 {
-    QDomElement elem = data.firstChildElement();
-    qDebug() << elem.tagName();
+    QList<Node*> parents;
+    QList<int> indentations;
+    parents << parent;
+    indentations << 0;
+
+    int number = 0;
+
+    while (number < lines.count())
+    {
+        int position = 0;
+        while (position < lines[number].length())
+        {
+            if (lines[number].at(position) != ' ')
+                break;
+            position++;
+        }
+
+        const QString lineData = lines[number].mid(position).trimmed();
+
+        if (!lineData.isEmpty())
+        {
+            // Read the column data from the rest of the line.
+            const QStringList columnStrings = lineData.split(QLatin1Char('\t'), QString::SkipEmptyParts);
+            QList<QVariant> columnData;
+            columnData.reserve(columnStrings.count());
+            for (const QString& columnString : columnStrings)
+                columnData << columnString;
+
+            if (position > indentations.last())
+            {
+                // The last child of the current parent is now the new parent
+                // unless the current parent has no children.
+
+                if (parents.last()->childCount() > 0)
+                {
+                    parents << parents.last()->child(parents.last()->childCount() - 1);
+                    indentations << position;
+                }
+            }
+            else
+            {
+                while (position < indentations.last() && parents.count() > 0)
+                {
+                    parents.pop_back();
+                    indentations.pop_back();
+                }
+            }
+
+            // Append a new item to the current parent's list of children.
+            parents.last()->appendChild(new Node(columnData, parents.last()));
+        }
+        ++number;
+    }
 }
 
 }  // namespace TreeExample

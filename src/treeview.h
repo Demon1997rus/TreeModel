@@ -14,7 +14,7 @@ class TreeView : public QWidget
     Q_OBJECT
 
 public:
-    TreeView(const QString& pathModelData, QWidget* parent = nullptr);
+    TreeView(const QString& modelData, QWidget* parent = nullptr);
 
 private:
     QVBoxLayout mainLayout;

@@ -11,7 +11,7 @@ class TreeModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    explicit TreeModel(const QString& pathModelData, QObject* parent = nullptr);
+    explicit TreeModel(const QString& data, QObject* parent = nullptr);
     virtual ~TreeModel();
 
     // QAbstractItemModel interface
@@ -23,8 +23,9 @@ public:
     QVariant data(const QModelIndex& index, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
-protected:
-    virtual void setupModelData(const QDomDocument& data);
+private:
+    void setupModelData(const QStringList& lines, Node* parent);
+    void traverseNode(const QDomNode& node, Node* root);
     Node* m_root;
 };
 

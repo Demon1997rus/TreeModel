@@ -10,7 +10,7 @@ QString searchModelData()
 {
     QString binDir = QCoreApplication::applicationDirPath();
     QString appName = QCoreApplication::applicationName();
-    QString fileName("data.xml");
+    QString fileName("data.txt");
 
     QStringList searchList;
     searchList.append(binDir);
@@ -44,8 +44,10 @@ QString searchModelData()
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-
-    TreeExample::TreeView w(searchModelData());
+    QFile file(searchModelData());
+    file.open(QIODevice::ReadOnly);
+    TreeExample::TreeView w(file.readAll());
+    file.close();
     w.show();
     return app.exec();
 }
